@@ -118,11 +118,14 @@ const controlAddRecipe = async function (newRecipe) {
 
     // Change ID in url
     window.history.pushState(null, '', `#${model.state.recipe.id}`);
-    
   } catch (err) {
     console.error('💥💥', err);
     addRecipeView.renderError(err.message);
   }
+};
+const controlSortRecipies = function () {
+  // sort recepies
+  model.sortSearchResults();
 };
 
 const init = function () {
@@ -131,6 +134,7 @@ const init = function () {
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerAddBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
+  // searchView.addHandlerSort(controlSortRecipies);
   paginationView.addHandlerClick(controlPagination);
   addRecipeView.addHandlerUpload(controlAddRecipe);
 };

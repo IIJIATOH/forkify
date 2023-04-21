@@ -2,9 +2,19 @@ import { mark } from 'regenerator-runtime';
 import icons from 'url:../../img/icons.svg'; // Parcel 2
 export default class View {
   _data;
+
   _clear() {
     this._parentElement.innerHTML = '';
   }
+  /**
+   * Render the recevied object to the DOM
+   * @param {Object | Object[]} data The data to be rendered(e.g recipe)
+   * @param {boolean} [render = true] If false create markup string instead of rendering to the DOM
+   * @returns {undefined | string} A markup string is returned if render = false
+   * @this {Object} View instance
+   * @author Platon Mikhaylov
+   * @todo Finish implementation
+   */
   render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();

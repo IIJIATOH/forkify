@@ -256,6 +256,7 @@ body {
   justify-content: space-between;
   align-items: center;
   display: flex;
+  position: relative;
 }
 
 .header__logo {
@@ -497,14 +498,23 @@ body {
 }
 
 .pagination {
+  justify-content: space-between;
   margin-top: auto;
   padding: 0 3.5rem;
+  display: flex;
 }
 
 .pagination:after {
   content: "";
   clear: both;
   display: table;
+}
+
+.pagination__link {
+  color: #f38e82;
+  margin: 1px;
+  font-size: 200%;
+  text-decoration: none;
 }
 
 .pagination__btn--prev {
@@ -524,6 +534,18 @@ body {
 
 .copyright .twitter-link:link, .copyright .twitter-link:visited {
   color: #918581;
+}
+
+.sort__btn {
+  font-size: 150%;
+  text-decoration: none;
+  position: absolute;
+  bottom: -30px;
+  left: 10px;
+}
+
+.sort__duration {
+  left: 100px;
 }
 
 .recipe {

@@ -669,12 +669,17 @@ const controlAddRecipe = async function(newRecipe) {
         (0, _addRecipeViewJsDefault.default).renderError(err.message);
     }
 };
+const controlSortRecipies = function() {
+    // sort recepies
+    _modelJs.sortSearchResults();
+};
 const init = function() {
     (0, _bookmarksViewJsDefault.default).addHandlerRender(controlBookmarks);
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controlServings);
     (0, _recipeViewJsDefault.default).addHandlerAddBookmark(controlAddBookmark);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResults);
+    // searchView.addHandlerSort(controlSortRecipies);
     (0, _paginationViewJsDefault.default).addHandlerClick(controlPagination);
     (0, _addRecipeViewJsDefault.default).addHandlerUpload(controlAddRecipe);
 };
@@ -2143,6 +2148,7 @@ parcelHelpers.export(exports, "state", ()=>state);
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
 parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults);
 parcelHelpers.export(exports, "getSearchResultsPage", ()=>getSearchResultsPage);
+parcelHelpers.export(exports, "sortSearchResults", ()=>sortSearchResults);
 parcelHelpers.export(exports, "updateServings", ()=>updateServings);
 parcelHelpers.export(exports, "addBookmark", ()=>addBookmark);
 parcelHelpers.export(exports, "deleteBookmark", ()=>deleteBookmark);
@@ -2198,11 +2204,13 @@ const loadSearchResults = async function(query) {
                 title: rec.title,
                 publisher: rec.publisher,
                 image: rec.image_url,
+                ingredients: rec.ingredients,
                 ...rec.key && {
                     key: rec.key
                 }
             };
         });
+        console.log(state.search.results);
         state.search.page = 1;
     } catch (err) {
         console.error(`${err}💥💥💥`);
@@ -2214,6 +2222,9 @@ const getSearchResultsPage = function(page = state.search.page) {
     const start = (page - 1) * state.search.resultsPerPage; //0;
     const end = page * state.search.resultsPerPage; //9;
     return state.search.results.slice(start, end);
+};
+const sortSearchResults = function() {
+    if (!state.search.results.length) return;
 };
 const updateServings = function(newServings) {
     state.recipe.ingredients.forEach((ing)=>{
@@ -3079,7 +3090,15 @@ class View {
     _clear() {
         this._parentElement.innerHTML = "";
     }
-    render(data, render = true) {
+    /**
+   * Render the recevied object to the DOM
+   * @param {Object | Object[]} data The data to be rendered(e.g recipe)
+   * @param {boolean} [render = true] If false create markup string instead of rendering to the DOM
+   * @returns {undefined | string} A markup string is returned if render = false
+   * @this {Object} View instance
+   * @author Platon Mikhaylov
+   * @todo Finish implementation
+   */ render(data, render = true) {
         if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
         this._data = data;
         const markup = this._generateMarkup();
@@ -3404,6 +3423,7 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class SearchView {
     _parentEl = document.querySelector(".search");
+    _header = document.querySelector(".header");
     getQuery() {
         const query = this._parentEl.querySelector(".search__field").value;
         this._clearInput();
@@ -3415,6 +3435,14 @@ class SearchView {
     addHandlerSearch(handler) {
         this._parentEl.addEventListener("submit", function(e) {
             e.preventDefault();
+            handler();
+        });
+    }
+    addHandlerSort(handler) {
+        this._header.addEventListener("click", function(e) {
+            const btn = e.target.closest(".sort__btn");
+            e.preventDefault();
+            if (!btn) return;
             handler();
         });
     }
@@ -3485,7 +3513,8 @@ class PaginationView extends (0, _viewDefault.default) {
     _parentElement = document.querySelector(".pagination");
     addHandlerClick(handler) {
         this._parentElement.addEventListener("click", function(e) {
-            const btn = e.target.closest(".btn--inline");
+            e.preventDefault();
+            const btn = e.target.closest(".pagination__btn");
             if (!btn) return;
             const goToPage = +btn.dataset.goto;
             handler(goToPage);
@@ -3494,17 +3523,30 @@ class PaginationView extends (0, _viewDefault.default) {
     _generateMarkup() {
         const curPage = this._data.page;
         const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
+        const _generateMarkupNumbPage = function() {
+            if (numPages === 1) return "";
+            let markup = "";
+            for(let i = 1; i <= numPages; i++)markup += `<a href="#" data-goto = ${i} class="pagination__link pagination__btn" /> ${i}</a>`;
+            return markup;
+        };
+        console.log(_generateMarkupNumbPage());
         // page 1, and there are other pages
         if (curPage === 1 && numPages > 1) return `
-      <button data-goto= "${curPage + 1}" class="btn--inline pagination__btn--next">
+      <button data-goto= "${curPage + 1}" class="btn--inline pagination__btn pagination__btn--next">
         <span>Page ${curPage + 1}</span>
         <svg class="search__icon">
           <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
         </svg>
-      </button>`;
+      </button>
+      <div>
+    ${_generateMarkupNumbPage()}
+    </div>`;
         // last page
         if (curPage === numPages && numPages > 1) return `
-      <button data-goto= "${curPage - 1}" class="btn--inline pagination__btn--prev">
+      <div>
+    ${_generateMarkupNumbPage()}
+    </div>
+      <button data-goto= "${curPage - 1}" class="btn--inline pagination__btn pagination__btn--prev">
         <svg class="search__icon">
           <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
         </svg>
@@ -3512,13 +3554,17 @@ class PaginationView extends (0, _viewDefault.default) {
     </button>`;
         // other page
         if (curPage < numPages) return `
-      <button data-goto= "${curPage - 1}" class="btn--inline pagination__btn--prev">
+      <button data-goto= "${curPage - 1}" class="btn--inline pagination__btn pagination__btn--prev">
         <svg class="search__icon">
           <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
         </svg>
         <span>Page ${curPage - 1}</span>
     </button>
-    <button data-goto= "${curPage + 1}" class="btn--inline pagination__btn--next">
+    <div>
+    ${_generateMarkupNumbPage()}
+    </div>
+
+    <button data-goto= "${curPage + 1}" class="btn--inline pagination__btn pagination__btn--next">
       <span>Page ${curPage + 1}</span>
       <svg class="search__icon">
         <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>

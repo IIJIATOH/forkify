@@ -52,9 +52,11 @@ export const loadSearchResults = async function (query) {
         title: rec.title,
         publisher: rec.publisher,
         image: rec.image_url,
+        ingredients: rec.ingredients,
         ...(rec.key && { key: rec.key }),
       };
     });
+    console.log(state.search.results);
     state.search.page = 1;
   } catch (err) {
     console.error(`${err}💥💥💥`);
@@ -67,6 +69,9 @@ export const getSearchResultsPage = function (page = state.search.page) {
   const start = (page - 1) * state.search.resultsPerPage; //0;
   const end = page * state.search.resultsPerPage; //9;
   return state.search.results.slice(start, end);
+};
+export const sortSearchResults = function () {
+  if (!state.search.results.length) return;
 };
 
 export const updateServings = function (newServings) {
