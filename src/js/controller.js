@@ -123,18 +123,23 @@ const controlAddRecipe = async function (newRecipe) {
     addRecipeView.renderError(err.message);
   }
 };
-const controlSortRecipies = function () {
-  // sort recepies
-  model.sortSearchResults();
+const controlAddIngridientsToList = function () {
+  console.log(model.state.recipe.ingredients);
 };
+// const controlSortRecipies = function () {
+//   // sort recepies
+//   model.sortSearchResults();
+// };
 
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerAddBookmark(controlAddBookmark);
+  recipeView.addHandlerAddIngridientsToList(controlAddIngridientsToList);
   searchView.addHandlerSearch(controlSearchResults);
   // searchView.addHandlerSort(controlSortRecipies);
+
   paginationView.addHandlerClick(controlPagination);
   addRecipeView.addHandlerUpload(controlAddRecipe);
 };

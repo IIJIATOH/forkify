@@ -18,14 +18,14 @@ class SearchView {
       handler();
     });
   }
-  addHandlerSort(handler) {
-    this._header.addEventListener('click', function (e) {
-      const btn = e.target.closest('.sort__btn');
-      e.preventDefault();
-      if (!btn) return;
-      handler();
-    });
-  }
+  // addHandlerSort(handler) {
+  //   this._header.addEventListener('click', function (e) {
+  //     const btn = e.target.closest('.sort__btn');
+  //     e.preventDefault();
+  //     if (!btn) return;
+  //     handler();
+  //   });
+  // }
 }
 
 export default new SearchView();

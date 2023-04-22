@@ -33,6 +33,7 @@ export const loadRecipe = async function (id) {
     const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
 
     state.recipe = createRecipeObject(data);
+    console.log(state.recipe);
 
     if (state.bookmarks.some(bookmark => bookmark.id === id))
       state.recipe.bookmarked = true;
@@ -56,7 +57,6 @@ export const loadSearchResults = async function (query) {
         ...(rec.key && { key: rec.key }),
       };
     });
-    console.log(state.search.results);
     state.search.page = 1;
   } catch (err) {
     console.error(`${err}💥💥💥`);
@@ -118,19 +118,24 @@ const clearBookmarks = function () {
 
 export const uploadRecipe = async function (newRecipe) {
   try {
-    const ingredients = Object.entries(newRecipe)
-      .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
-      .map(ing => {
-        const ingArr = ing[1].split(',').map(el => el.trim());
-        // const ingArr = ing[1].replaceAll(' ', '').split(',');
-        if (ingArr.length !== 3)
-          throw new Error(
-            'Wrong ingredient format! Please use the correct format :)'
-          );
-        const [quantity, unit, description] = ingArr;
-
-        return { quantity: quantity ? +quantity : null, unit, description };
+    // MY BUG
+    const ingredients = [];
+    // console.log(Object.entries(newRecipe));
+    const arrOfIngridients = Object.entries(newRecipe).filter(
+      entry => entry[0].startsWith('ingredient') && entry[1] !== ''
+    );
+    for (let i = 1; i <= 6; i++) {
+      const copy = arrOfIngridients.filter(ing =>
+        ing[0].startsWith(`ingredient-${i}`)
+      );
+      ingredients.push({
+        quantity: +copy[0][1],
+        unit: copy[1][1],
+        description: copy[2][1],
       });
+      console.log(ingredients);
+    }
+    // console.log(result);
 
     const recipe = {
       title: newRecipe.title,
@@ -148,4 +153,5 @@ export const uploadRecipe = async function (newRecipe) {
   } catch (err) {
     throw err;
   }
+  // export const getIngridients = async function () {};
 };

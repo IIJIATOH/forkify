@@ -669,15 +669,19 @@ const controlAddRecipe = async function(newRecipe) {
         (0, _addRecipeViewJsDefault.default).renderError(err.message);
     }
 };
-const controlSortRecipies = function() {
-    // sort recepies
-    _modelJs.sortSearchResults();
+const controlAddIngridientsToList = function() {
+    console.log(_modelJs.state.recipe.ingredients);
 };
+// const controlSortRecipies = function () {
+//   // sort recepies
+//   model.sortSearchResults();
+// };
 const init = function() {
     (0, _bookmarksViewJsDefault.default).addHandlerRender(controlBookmarks);
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controlServings);
     (0, _recipeViewJsDefault.default).addHandlerAddBookmark(controlAddBookmark);
+    (0, _recipeViewJsDefault.default).addHandlerAddIngridientsToList(controlAddIngridientsToList);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResults);
     // searchView.addHandlerSort(controlSortRecipies);
     (0, _paginationViewJsDefault.default).addHandlerClick(controlPagination);
@@ -2187,6 +2191,7 @@ const loadRecipe = async function(id) {
     try {
         const data = await (0, _helper.AJAX)(`${(0, _config.API_URL)}${id}?key=${(0, _config.KEY)}`);
         state.recipe = createRecipeObject(data);
+        console.log(state.recipe);
         if (state.bookmarks.some((bookmark)=>bookmark.id === id)) state.recipe.bookmarked = true;
     } catch (err) {
         // Temp error handler
@@ -2210,7 +2215,6 @@ const loadSearchResults = async function(query) {
                 }
             };
         });
-        console.log(state.search.results);
         state.search.page = 1;
     } catch (err) {
         console.error(`${err}💥💥💥`);
@@ -2262,17 +2266,20 @@ const clearBookmarks = function() {
 };
 const uploadRecipe = async function(newRecipe) {
     try {
-        const ingredients = Object.entries(newRecipe).filter((entry)=>entry[0].startsWith("ingredient") && entry[1] !== "").map((ing)=>{
-            const ingArr = ing[1].split(",").map((el)=>el.trim());
-            // const ingArr = ing[1].replaceAll(' ', '').split(',');
-            if (ingArr.length !== 3) throw new Error("Wrong ingredient format! Please use the correct format :)");
-            const [quantity, unit, description] = ingArr;
-            return {
-                quantity: quantity ? +quantity : null,
-                unit,
-                description
-            };
-        });
+        // MY BUG
+        const ingredients = [];
+        // console.log(Object.entries(newRecipe));
+        const arrOfIngridients = Object.entries(newRecipe).filter((entry)=>entry[0].startsWith("ingredient") && entry[1] !== "");
+        for(let i = 1; i <= 6; i++){
+            const copy = arrOfIngridients.filter((ing)=>ing[0].startsWith(`ingredient-${i}`));
+            ingredients.push({
+                quantity: +copy[0][1],
+                unit: copy[1][1],
+                description: copy[2][1]
+            });
+            console.log(ingredients);
+        }
+        // console.log(result);
         const recipe = {
             title: newRecipe.title,
             source_url: newRecipe.sourceUrl,
@@ -2288,6 +2295,7 @@ const uploadRecipe = async function(newRecipe) {
     } catch (err) {
         throw err;
     }
+// export const getIngridients = async function () {};
 };
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","regenerator-runtime":"dXNgZ","./config":"k5Hzs","./helper":"lVRAz"}],"dXNgZ":[function(require,module,exports) {
@@ -2984,6 +2992,13 @@ class RecipeView extends (0, _viewDefault.default) {
             handler();
         });
     }
+    addHandlerAddIngridientsToList(handler) {
+        this._parentElement.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--addIng");
+            if (!btn) return;
+            handler();
+        });
+    }
     _generateMarkup() {
         return `
     <figure class="recipe__fig">
@@ -3028,6 +3043,7 @@ class RecipeView extends (0, _viewDefault.default) {
           <use href="${0, _iconsSvgDefault.default}#icon-user"></use>
        </svg>
       </div>
+      <button class="btn--addIng">ADD INGRIDIENTS</button>
        <button class="btn--round btn--bookmark">
          <svg class="">
            <use href="${0, _iconsSvgDefault.default}#icon-bookmark${this._data.bookmarked ? "-fill" : ""}"></use>
@@ -3438,14 +3454,6 @@ class SearchView {
             handler();
         });
     }
-    addHandlerSort(handler) {
-        this._header.addEventListener("click", function(e) {
-            const btn = e.target.closest(".sort__btn");
-            e.preventDefault();
-            if (!btn) return;
-            handler();
-        });
-    }
 }
 exports.default = new SearchView();
 
@@ -3636,6 +3644,7 @@ class AddRecipeView extends (0, _viewDefault.default) {
                 ...new FormData(this)
             ];
             const data = Object.fromEntries(dataArr);
+            console.log(data);
             handler(data);
         });
     }

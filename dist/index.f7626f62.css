@@ -761,6 +761,8 @@ body {
 }
 
 .upload__column {
+  box-sizing: border-box;
+  width: 14rem;
   grid-template-columns: 1fr 2.8fr;
   align-items: center;
   gap: 1.5rem;
@@ -808,6 +810,12 @@ body {
 .upload__btn {
   grid-column: 1 / -1;
   justify-self: center;
+}
+
+.ingredients__container {
+  grid-template-columns: 10rem 10rem 10rem auto;
+  gap: 1rem;
+  display: grid;
 }
 
 /*# sourceMappingURL=index.f7626f62.css.map */

@@ -52,6 +52,8 @@
     grid-template-columns: 1fr 2.8fr;
     align-items: center;
     gap: 1.5rem;
+    box-sizing: border-box;
+    width: 14rem;
 
     & label {
       font-size: 1.5rem;
@@ -96,4 +98,9 @@
     grid-column: 1 / -1;
     justify-self: center;
   }
+}
+.ingredients__container {
+  display: grid;
+  grid-template-columns: 10rem 10rem 10rem auto;
+  gap: 1rem;
 }
