@@ -26,13 +26,7 @@ class RecipeView extends View {
       handler();
     });
   }
-  addHandlerAddIngridientsToList(handler) {
-    this._parentElement.addEventListener('click', function (e) {
-      const btn = e.target.closest('.btn--addIng');
-      if (!btn) return;
-      handler();
-    });
-  }
+
   _generateMarkup() {
     return `
     <figure class="recipe__fig">

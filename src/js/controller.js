@@ -7,12 +7,15 @@ import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import bookmarksView from './views/bookmarksView.js';
 import addRecipeView from './views/addRecipeView.js';
+import ShoppingCartView from './views/shoppingCartView.js';
 
 // import icons from '../img/icons.svg'; // Parcel 1
 import icons from 'url:../img/icons.svg'; // Parcel 2
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { async } from 'regenerator-runtime';
+import shoppingCartView from './views/shoppingCartView.js';
+
 // const recipeContainer = document.querySelector('.recipe');
 
 // https://forkify-api.herokuapp.com/v2
@@ -124,7 +127,15 @@ const controlAddRecipe = async function (newRecipe) {
   }
 };
 const controlAddIngridientsToList = function () {
-  console.log(model.state.recipe.ingredients);
+  model.getIngridients();
+};
+const controlShoppingCart = function () {
+  console.log(model.state.shoppingCart);
+  shoppingCartView.render(model.state.shoppingCart);
+};
+const controlDeleteIngridientsFromList = function () {
+  model.clearIngridients();
+  location.reload();
 };
 // const controlSortRecipies = function () {
 //   // sort recepies
@@ -136,7 +147,11 @@ const init = function () {
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerAddBookmark(controlAddBookmark);
-  recipeView.addHandlerAddIngridientsToList(controlAddIngridientsToList);
+  ShoppingCartView.addHandlerAddIngridientsToList(controlAddIngridientsToList);
+  ShoppingCartView.addHandlerShoppingCart(controlShoppingCart);
+  shoppingCartView.addHandlerDeleteIngridientsFromList(
+    controlDeleteIngridientsFromList
+  );
   searchView.addHandlerSearch(controlSearchResults);
   // searchView.addHandlerSort(controlSortRecipies);
 

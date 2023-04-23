@@ -576,6 +576,8 @@ var _bookmarksViewJs = require("./views/bookmarksView.js");
 var _bookmarksViewJsDefault = parcelHelpers.interopDefault(_bookmarksViewJs);
 var _addRecipeViewJs = require("./views/addRecipeView.js");
 var _addRecipeViewJsDefault = parcelHelpers.interopDefault(_addRecipeViewJs);
+var _shoppingCartViewJs = require("./views/shoppingCartView.js");
+var _shoppingCartViewJsDefault = parcelHelpers.interopDefault(_shoppingCartViewJs);
 // import icons from '../img/icons.svg'; // Parcel 1
 var _iconsSvg = require("url:../img/icons.svg"); // Parcel 2
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
@@ -670,7 +672,15 @@ const controlAddRecipe = async function(newRecipe) {
     }
 };
 const controlAddIngridientsToList = function() {
-    console.log(_modelJs.state.recipe.ingredients);
+    _modelJs.getIngridients();
+};
+const controlShoppingCart = function() {
+    console.log(_modelJs.state.shoppingCart);
+    (0, _shoppingCartViewJsDefault.default).render(_modelJs.state.shoppingCart);
+};
+const controlDeleteIngridientsFromList = function() {
+    _modelJs.clearIngridients();
+    location.reload();
 };
 // const controlSortRecipies = function () {
 //   // sort recepies
@@ -681,7 +691,9 @@ const init = function() {
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controlServings);
     (0, _recipeViewJsDefault.default).addHandlerAddBookmark(controlAddBookmark);
-    (0, _recipeViewJsDefault.default).addHandlerAddIngridientsToList(controlAddIngridientsToList);
+    (0, _shoppingCartViewJsDefault.default).addHandlerAddIngridientsToList(controlAddIngridientsToList);
+    (0, _shoppingCartViewJsDefault.default).addHandlerShoppingCart(controlShoppingCart);
+    (0, _shoppingCartViewJsDefault.default).addHandlerDeleteIngridientsFromList(controlDeleteIngridientsFromList);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResults);
     // searchView.addHandlerSort(controlSortRecipies);
     (0, _paginationViewJsDefault.default).addHandlerClick(controlPagination);
@@ -689,7 +701,7 @@ const init = function() {
 };
 init();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../img/icons.svg":"loVOp","core-js/modules/es.regexp.flags.js":"gSXXb","core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./views/recipeView.js":"l60JC","regenerator-runtime/runtime":"dXNgZ","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/paginationView.js":"6z7bi","./views/bookmarksView.js":"4Lqzq","./config.js":"k5Hzs","./views/addRecipeView.js":"i6DNj","regenerator-runtime":"dXNgZ"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../img/icons.svg":"loVOp","core-js/modules/es.regexp.flags.js":"gSXXb","core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./views/recipeView.js":"l60JC","regenerator-runtime/runtime":"dXNgZ","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/paginationView.js":"6z7bi","./views/bookmarksView.js":"4Lqzq","./config.js":"k5Hzs","./views/addRecipeView.js":"i6DNj","regenerator-runtime":"dXNgZ","./views/shoppingCartView.js":"b2ZMo"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -2156,6 +2168,8 @@ parcelHelpers.export(exports, "sortSearchResults", ()=>sortSearchResults);
 parcelHelpers.export(exports, "updateServings", ()=>updateServings);
 parcelHelpers.export(exports, "addBookmark", ()=>addBookmark);
 parcelHelpers.export(exports, "deleteBookmark", ()=>deleteBookmark);
+parcelHelpers.export(exports, "clearIngridients", ()=>clearIngridients);
+parcelHelpers.export(exports, "getIngridients", ()=>getIngridients);
 parcelHelpers.export(exports, "uploadRecipe", ()=>uploadRecipe);
 var _regeneratorRuntime = require("regenerator-runtime");
 var _config = require("./config");
@@ -2169,7 +2183,8 @@ const state = {
         page: 1,
         resultsPerPage: (0, _config.RES_PER_PAGE)
     },
-    bookmarks: []
+    bookmarks: [],
+    shoppingCart: []
 };
 const createRecipeObject = function(data) {
     const recipe = data.data.recipe;
@@ -2255,9 +2270,26 @@ const deleteBookmark = function(id) {
     if (id === state.recipe.id) state.recipe.bookmarked = false;
     persistBookmarks();
 };
+// persistIngridients();
+const persistIngridients = function() {
+    localStorage.setItem("ingredients", JSON.stringify(state.shoppingCart));
+};
+const clearIngridients = function() {
+    localStorage.clear("ingredients");
+};
+const getIngridients = function() {
+    try {
+        state.shoppingCart.push(state.recipe.ingredients);
+        persistIngridients();
+    } catch (err) {
+        throw err;
+    }
+};
 const init = function() {
     const storage = localStorage.getItem("bookmarks");
+    const ingridients = localStorage.getItem("ingredients");
     if (storage) state.bookmarks = JSON.parse(storage);
+    if (ingridients) state.shoppingCart = JSON.parse(ingridients);
 };
 init();
 console.log(state.bookmarks);
@@ -2295,7 +2327,6 @@ const uploadRecipe = async function(newRecipe) {
     } catch (err) {
         throw err;
     }
-// export const getIngridients = async function () {};
 };
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","regenerator-runtime":"dXNgZ","./config":"k5Hzs","./helper":"lVRAz"}],"dXNgZ":[function(require,module,exports) {
@@ -2992,13 +3023,6 @@ class RecipeView extends (0, _viewDefault.default) {
             handler();
         });
     }
-    addHandlerAddIngridientsToList(handler) {
-        this._parentElement.addEventListener("click", function(e) {
-            const btn = e.target.closest(".btn--addIng");
-            if (!btn) return;
-            handler();
-        });
-    }
     _generateMarkup() {
         return `
     <figure class="recipe__fig">
@@ -3651,6 +3675,64 @@ class AddRecipeView extends (0, _viewDefault.default) {
     _generateMarkup() {}
 }
 exports.default = new AddRecipeView();
+
+},{"./View":"5cUXS","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"b2ZMo":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class ShoppingCartView extends (0, _viewDefault.default) {
+    _parentElement = document.querySelector(".recipe");
+    _btn = document.querySelector(".nav__btn--shoping-cart");
+    _errorMessage = "No ingridients in  shopping cart";
+    // Add ingridients
+    addHandlerAddIngridientsToList(handler) {
+        this._parentElement.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--addIng");
+            if (!btn) return;
+            handler();
+        });
+    }
+    // Delete ingridients
+    addHandlerDeleteIngridientsFromList(handler) {
+        this._parentElement.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--delete-all-ing");
+            if (!btn) return;
+            handler();
+        });
+    }
+    addHandlerShoppingCart(handler) {
+        this._btn.addEventListener("click", handler);
+    }
+    _generateMarkup() {
+        console.log(this._data.flat());
+        return `<div class="recipe__ingredients">
+      <h2 class="heading--2">Recipe ingredients</h2>
+      <ul class="recipe__ingredient-list">
+        ${this._data.flat().map(this._generateMarkupIngridient).join("")}
+      </ul>
+    </div>;
+    <button class="btn--delete-all-ing">Delete All ingridients</button>
+    `;
+    }
+    _generateMarkupIngridient(ing) {
+        return `
+      <li class="recipe__ingredient">
+        <svg class="recipe__icon">
+          <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
+        </svg>
+        <div class="recipe__quantity">${ing.quantity ? new Fraction(ing.quantity).toString() : ""}</div>
+        <div class="recipe__description">
+          <span class="recipe__unit">${ing.unit}</span>
+          ${ing.description}
+        </div>
+      </li>
+    `;
+    }
+}
+exports.default = new ShoppingCartView();
 
 },{"./View":"5cUXS","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["d8XZh","aenu9"], "aenu9", "parcelRequire3a11")
 

@@ -12,6 +12,7 @@ export const state = {
     resultsPerPage: RES_PER_PAGE,
   },
   bookmarks: [],
+  shoppingCart: [],
 };
 const createRecipeObject = function (data) {
   const recipe = data.data.recipe;
@@ -103,10 +104,29 @@ export const deleteBookmark = function (id) {
   if (id === state.recipe.id) state.recipe.bookmarked = false;
   persistBookmarks();
 };
+// persistIngridients();
+
+const persistIngridients = function () {
+  localStorage.setItem('ingredients', JSON.stringify(state.shoppingCart));
+};
+export const clearIngridients = function () {
+  localStorage.clear('ingredients');
+};
+// clearIngridients();
+export const getIngridients = function () {
+  try {
+    state.shoppingCart.push(state.recipe.ingredients);
+    persistIngridients();
+  } catch (err) {
+    throw err;
+  }
+};
 
 const init = function () {
   const storage = localStorage.getItem('bookmarks');
+  const ingridients = localStorage.getItem('ingredients');
   if (storage) state.bookmarks = JSON.parse(storage);
+  if (ingridients) state.shoppingCart = JSON.parse(ingridients);
 };
 init();
 console.log(state.bookmarks);
@@ -153,5 +173,4 @@ export const uploadRecipe = async function (newRecipe) {
   } catch (err) {
     throw err;
   }
-  // export const getIngridients = async function () {};
 };
