@@ -26,6 +26,13 @@ class RecipeView extends View {
       handler();
     });
   }
+  addHandlerAddRecipeToWeek(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--week-day');
+      if (!btn) return;
+      handler(btn);
+    });
+  }
 
   _generateMarkup() {
     return `
@@ -72,6 +79,7 @@ class RecipeView extends View {
               <use href="${icons}#icon-plus-circle"></use>
             </svg>
           </button>
+          
         </div>
       </div>
 
@@ -82,7 +90,17 @@ class RecipeView extends View {
        </svg>
       </div>
       <button class="btn--addIng">ADD INGRIDIENTS</button>
-       <button class="btn--round btn--bookmark">
+      <div class= "btn--week"><span>Week</span>
+      <button data-day='mon' class= "btn--week-day btn--mon">Mon</button>
+      <button data-day='tue' class= "btn--week-day btn--tue">Tue</button>
+      <button data-day='wed' class= "btn--week-day btn--wed">Wed</button>
+      <button data-day='thu' class= "btn--week-day btn--thu">Thu</button>
+      <button data-day='fri' class= "btn--week-day btn--fri">Fri</button>
+      <button data-day='sat' class= "btn--week-day btn--sat">Sat</button>
+      <button data-day='sun' class= "btn--week-day btn--sun">Sun</button>
+      </div>
+      </button>
+      <button class="btn--round btn--bookmark">
          <svg class="">
            <use href="${icons}#icon-bookmark${
       this._data.bookmarked ? '-fill' : ''

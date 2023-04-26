@@ -211,3 +211,13 @@
     font-weight: 600;
   }
 }
+.btn--week {
+  padding: 10px;
+  background-color: grey;
+  &-day {
+    display: none;
+  }
+}
+.btn--week:hover .btn--week-day {
+  display: block;
+}

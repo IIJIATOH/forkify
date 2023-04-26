@@ -13,6 +13,7 @@ export const state = {
   },
   bookmarks: [],
   shoppingCart: [],
+  weekend: [[], [], [], [], [], [], []],
 };
 const createRecipeObject = function (data) {
   const recipe = data.data.recipe;
@@ -63,6 +64,32 @@ export const loadSearchResults = async function (query) {
     console.error(`${err}💥💥💥`);
     throw err;
   }
+};
+export const addRecipeToWeek = function (btn) {
+  switch (btn.dataset.day) {
+    case 'mon':
+      state.weekend[0].push(state.recipe);
+      break;
+    case 'tue':
+      state.weekend[1].push(state.recipe);
+      break;
+    case 'wed':
+      state.weekend[2].push(state.recipe);
+      break;
+    case 'thu':
+      state.weekend[3].push(state.recipe);
+      break;
+    case 'fri':
+      state.weekend[4].push(state.recipe);
+      break;
+    case 'sat':
+      state.weekend[5].push(state.recipe);
+      break;
+    case 'sun':
+      state.weekend[6].push(state.recipe);
+      break;
+  }
+  console.log(state.weekend);
 };
 
 export const getSearchResultsPage = function (page = state.search.page) {

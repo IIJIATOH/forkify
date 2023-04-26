@@ -8,6 +8,7 @@ import paginationView from './views/paginationView.js';
 import bookmarksView from './views/bookmarksView.js';
 import addRecipeView from './views/addRecipeView.js';
 import ShoppingCartView from './views/shoppingCartView.js';
+import weekRecipeView from './views/weekRecipeView.js';
 
 // import icons from '../img/icons.svg'; // Parcel 1
 import icons from 'url:../img/icons.svg'; // Parcel 2
@@ -137,6 +138,14 @@ const controlDeleteIngridientsFromList = function () {
   model.clearIngridients();
   location.reload();
 };
+const controlWeek = function (btn) {
+  console.log(btn.dataset.day);
+  model.addRecipeToWeek(btn);
+};
+const controlCalender = function () {
+  console.log('Working');
+  weekRecipeView.render(model.state.weekend);
+};
 // const controlSortRecipies = function () {
 //   // sort recepies
 //   model.sortSearchResults();
@@ -147,6 +156,8 @@ const init = function () {
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerAddBookmark(controlAddBookmark);
+  recipeView.addHandlerAddRecipeToWeek(controlWeek);
+  weekRecipeView.addHandlerCalender(controlCalender);
   ShoppingCartView.addHandlerAddIngridientsToList(controlAddIngridientsToList);
   ShoppingCartView.addHandlerShoppingCart(controlShoppingCart);
   shoppingCartView.addHandlerDeleteIngridientsFromList(

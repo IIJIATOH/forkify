@@ -250,6 +250,19 @@ body {
   line-height: 1.5;
 }
 
+.btn--week {
+  background-color: gray;
+  padding: 10px;
+}
+
+.btn--week-day {
+  display: none;
+}
+
+.btn--week:hover .btn--week-day {
+  display: block;
+}
+
 .header {
   background-color: #f9f5f3;
   grid-area: head;
@@ -281,7 +294,7 @@ body {
 
 .search__field {
   color: inherit;
-  width: 30rem;
+  width: 25rem;
   background: none;
   border: none;
   font-family: inherit;
@@ -815,6 +828,11 @@ body {
 .ingredients__container {
   grid-template-columns: 10rem 10rem 10rem auto;
   gap: 1rem;
+  display: grid;
+}
+
+.week {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   display: grid;
 }
 

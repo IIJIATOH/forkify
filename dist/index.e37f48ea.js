@@ -578,6 +578,8 @@ var _addRecipeViewJs = require("./views/addRecipeView.js");
 var _addRecipeViewJsDefault = parcelHelpers.interopDefault(_addRecipeViewJs);
 var _shoppingCartViewJs = require("./views/shoppingCartView.js");
 var _shoppingCartViewJsDefault = parcelHelpers.interopDefault(_shoppingCartViewJs);
+var _weekRecipeViewJs = require("./views/weekRecipeView.js");
+var _weekRecipeViewJsDefault = parcelHelpers.interopDefault(_weekRecipeViewJs);
 // import icons from '../img/icons.svg'; // Parcel 1
 var _iconsSvg = require("url:../img/icons.svg"); // Parcel 2
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
@@ -682,6 +684,14 @@ const controlDeleteIngridientsFromList = function() {
     _modelJs.clearIngridients();
     location.reload();
 };
+const controlWeek = function(btn) {
+    console.log(btn.dataset.day);
+    _modelJs.addRecipeToWeek(btn);
+};
+const controlCalender = function() {
+    console.log("Working");
+    (0, _weekRecipeViewJsDefault.default).render(_modelJs.state.weekend);
+};
 // const controlSortRecipies = function () {
 //   // sort recepies
 //   model.sortSearchResults();
@@ -691,6 +701,8 @@ const init = function() {
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controlServings);
     (0, _recipeViewJsDefault.default).addHandlerAddBookmark(controlAddBookmark);
+    (0, _recipeViewJsDefault.default).addHandlerAddRecipeToWeek(controlWeek);
+    (0, _weekRecipeViewJsDefault.default).addHandlerCalender(controlCalender);
     (0, _shoppingCartViewJsDefault.default).addHandlerAddIngridientsToList(controlAddIngridientsToList);
     (0, _shoppingCartViewJsDefault.default).addHandlerShoppingCart(controlShoppingCart);
     (0, _shoppingCartViewJsDefault.default).addHandlerDeleteIngridientsFromList(controlDeleteIngridientsFromList);
@@ -701,74 +713,7 @@ const init = function() {
 };
 init();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../img/icons.svg":"loVOp","core-js/modules/es.regexp.flags.js":"gSXXb","core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./views/recipeView.js":"l60JC","regenerator-runtime/runtime":"dXNgZ","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/paginationView.js":"6z7bi","./views/bookmarksView.js":"4Lqzq","./config.js":"k5Hzs","./views/addRecipeView.js":"i6DNj","regenerator-runtime":"dXNgZ","./views/shoppingCartView.js":"b2ZMo"}],"gkKU3":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, "__esModule", {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"loVOp":[function(require,module,exports) {
-module.exports = require("3fee1d22d3142477").getBundleURL("hWUTQ") + "icons.dfd7a6db.svg" + "?" + Date.now();
-
-},{"3fee1d22d3142477":"lgJ39"}],"lgJ39":[function(require,module,exports) {
-"use strict";
-var bundleURL = {};
-function getBundleURLCached(id) {
-    var value = bundleURL[id];
-    if (!value) {
-        value = getBundleURL();
-        bundleURL[id] = value;
-    }
-    return value;
-}
-function getBundleURL() {
-    try {
-        throw new Error();
-    } catch (err) {
-        var matches = ("" + err.stack).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^)\n]+/g);
-        if (matches) // The first two stack frames will be this function and getBundleURLCached.
-        // Use the 3rd one, which will be a runtime in the original bundle.
-        return getBaseURL(matches[2]);
-    }
-    return "/";
-}
-function getBaseURL(url) {
-    return ("" + url).replace(/^((?:https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/.+)\/[^/]+$/, "$1") + "/";
-} // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
-function getOrigin(url) {
-    var matches = ("" + url).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^/]+/);
-    if (!matches) throw new Error("Origin not found");
-    return matches[0];
-}
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-exports.getOrigin = getOrigin;
-
-},{}],"gSXXb":[function(require,module,exports) {
+},{"core-js/modules/es.regexp.flags.js":"gSXXb","core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./config.js":"k5Hzs","./views/recipeView.js":"l60JC","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/paginationView.js":"6z7bi","./views/bookmarksView.js":"4Lqzq","./views/addRecipeView.js":"i6DNj","./views/shoppingCartView.js":"b2ZMo","url:../img/icons.svg":"loVOp","regenerator-runtime/runtime":"dXNgZ","regenerator-runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./views/weekRecipeView.js":"f686o"}],"gSXXb":[function(require,module,exports) {
 var global = require("800ab387e38cf212");
 var DESCRIPTORS = require("f549baadddfc6cca");
 var defineBuiltInAccessor = require("c17acb8d6b403d23");
@@ -2163,6 +2108,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state);
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
 parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults);
+parcelHelpers.export(exports, "addRecipeToWeek", ()=>addRecipeToWeek);
 parcelHelpers.export(exports, "getSearchResultsPage", ()=>getSearchResultsPage);
 parcelHelpers.export(exports, "sortSearchResults", ()=>sortSearchResults);
 parcelHelpers.export(exports, "updateServings", ()=>updateServings);
@@ -2184,7 +2130,16 @@ const state = {
         resultsPerPage: (0, _config.RES_PER_PAGE)
     },
     bookmarks: [],
-    shoppingCart: []
+    shoppingCart: [],
+    weekend: [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+    ]
 };
 const createRecipeObject = function(data) {
     const recipe = data.data.recipe;
@@ -2235,6 +2190,32 @@ const loadSearchResults = async function(query) {
         console.error(`${err}💥💥💥`);
         throw err;
     }
+};
+const addRecipeToWeek = function(btn) {
+    switch(btn.dataset.day){
+        case "mon":
+            state.weekend[0].push(state.recipe);
+            break;
+        case "tue":
+            state.weekend[1].push(state.recipe);
+            break;
+        case "wed":
+            state.weekend[2].push(state.recipe);
+            break;
+        case "thu":
+            state.weekend[3].push(state.recipe);
+            break;
+        case "fri":
+            state.weekend[4].push(state.recipe);
+            break;
+        case "sat":
+            state.weekend[5].push(state.recipe);
+            break;
+        case "sun":
+            state.weekend[6].push(state.recipe);
+            break;
+    }
+    console.log(state.weekend);
 };
 const getSearchResultsPage = function(page = state.search.page) {
     state.search.page = page;
@@ -2329,7 +2310,7 @@ const uploadRecipe = async function(newRecipe) {
     }
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","regenerator-runtime":"dXNgZ","./config":"k5Hzs","./helper":"lVRAz"}],"dXNgZ":[function(require,module,exports) {
+},{"regenerator-runtime":"dXNgZ","./config":"k5Hzs","./helper":"lVRAz","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dXNgZ":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -2930,7 +2911,37 @@ const RES_PER_PAGE = 10;
 const KEY = "bb636990-944f-4241-892c-de35f19e33b8";
 const MODAL_CLOSE_SEC = 2.5;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lVRAz":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"lVRAz":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "AJAX", ()=>AJAX);
@@ -3023,6 +3034,13 @@ class RecipeView extends (0, _viewDefault.default) {
             handler();
         });
     }
+    addHandlerAddRecipeToWeek(handler) {
+        this._parentElement.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--week-day");
+            if (!btn) return;
+            handler(btn);
+        });
+    }
     _generateMarkup() {
         return `
     <figure class="recipe__fig">
@@ -3058,6 +3076,7 @@ class RecipeView extends (0, _viewDefault.default) {
               <use href="${0, _iconsSvgDefault.default}#icon-plus-circle"></use>
             </svg>
           </button>
+          
         </div>
       </div>
 
@@ -3068,7 +3087,17 @@ class RecipeView extends (0, _viewDefault.default) {
        </svg>
       </div>
       <button class="btn--addIng">ADD INGRIDIENTS</button>
-       <button class="btn--round btn--bookmark">
+      <div class= "btn--week"><span>Week</span>
+      <button data-day='mon' class= "btn--week-day btn--mon">Mon</button>
+      <button data-day='tue' class= "btn--week-day btn--tue">Tue</button>
+      <button data-day='wed' class= "btn--week-day btn--wed">Wed</button>
+      <button data-day='thu' class= "btn--week-day btn--thu">Thu</button>
+      <button data-day='fri' class= "btn--week-day btn--fri">Fri</button>
+      <button data-day='sat' class= "btn--week-day btn--sat">Sat</button>
+      <button data-day='sun' class= "btn--week-day btn--sun">Sun</button>
+      </div>
+      </button>
+      <button class="btn--round btn--bookmark">
          <svg class="">
            <use href="${0, _iconsSvgDefault.default}#icon-bookmark${this._data.bookmarked ? "-fill" : ""}"></use>
         </svg>
@@ -3119,7 +3148,7 @@ class RecipeView extends (0, _viewDefault.default) {
 }
 exports.default = new RecipeView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../../img/icons.svg":"loVOp","./View":"5cUXS","fractional":"3SU56"}],"5cUXS":[function(require,module,exports) {
+},{"./View":"5cUXS","url:../../img/icons.svg":"loVOp","fractional":"3SU56","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5cUXS":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _regeneratorRuntime = require("regenerator-runtime");
@@ -3205,7 +3234,44 @@ class View {
 }
 exports.default = View;
 
-},{"url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","regenerator-runtime":"dXNgZ"}],"3SU56":[function(require,module,exports) {
+},{"regenerator-runtime":"dXNgZ","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"loVOp":[function(require,module,exports) {
+module.exports = require("3fee1d22d3142477").getBundleURL("hWUTQ") + "icons.dfd7a6db.svg" + "?" + Date.now();
+
+},{"3fee1d22d3142477":"lgJ39"}],"lgJ39":[function(require,module,exports) {
+"use strict";
+var bundleURL = {};
+function getBundleURLCached(id) {
+    var value = bundleURL[id];
+    if (!value) {
+        value = getBundleURL();
+        bundleURL[id] = value;
+    }
+    return value;
+}
+function getBundleURL() {
+    try {
+        throw new Error();
+    } catch (err) {
+        var matches = ("" + err.stack).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^)\n]+/g);
+        if (matches) // The first two stack frames will be this function and getBundleURLCached.
+        // Use the 3rd one, which will be a runtime in the original bundle.
+        return getBaseURL(matches[2]);
+    }
+    return "/";
+}
+function getBaseURL(url) {
+    return ("" + url).replace(/^((?:https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/.+)\/[^/]+$/, "$1") + "/";
+} // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
+function getOrigin(url) {
+    var matches = ("" + url).match(/(https?|file|ftp|(chrome|moz|safari-web)-extension):\/\/[^/]+/);
+    if (!matches) throw new Error("Origin not found");
+    return matches[0];
+}
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+exports.getOrigin = getOrigin;
+
+},{}],"3SU56":[function(require,module,exports) {
 /*
 fraction.js
 A Javascript fraction library.
@@ -3500,7 +3566,7 @@ class ResultsView extends (0, _viewDefault.default) {
 }
 exports.default = new ResultsView();
 
-},{"./View":"5cUXS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../../img/icons.svg":"loVOp","./previewView":"1FDQ6"}],"1FDQ6":[function(require,module,exports) {
+},{"./View":"5cUXS","./previewView":"1FDQ6","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1FDQ6":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
@@ -3630,7 +3696,7 @@ class BookmarksView extends (0, _viewDefault.default) {
 }
 exports.default = new BookmarksView();
 
-},{"./View":"5cUXS","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./previewView":"1FDQ6"}],"i6DNj":[function(require,module,exports) {
+},{"./View":"5cUXS","./previewView":"1FDQ6","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i6DNj":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
@@ -3734,6 +3800,60 @@ class ShoppingCartView extends (0, _viewDefault.default) {
 }
 exports.default = new ShoppingCartView();
 
-},{"./View":"5cUXS","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["d8XZh","aenu9"], "aenu9", "parcelRequire3a11")
+},{"./View":"5cUXS","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"f686o":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+var _previewView = require("./previewView");
+var _previewViewDefault = parcelHelpers.interopDefault(_previewView);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class weekRecipeView extends (0, _viewDefault.default) {
+    _parentElement = document.querySelector(".recipe");
+    _errorMessage = "No recipes found on your weekend! Please add some recipes ;)";
+    _btn = document.querySelector(".nav__btn--calender");
+    addHandlerCalender(handler) {
+        this._btn.addEventListener("click", function() {
+            handler();
+        });
+    }
+    render(data, render = true) {
+        if (!data || Array.isArray(data) && data.length === 0) return "";
+        this._data = data;
+        const markup = this._generateMarkup();
+        if (!render) return markup;
+        this._clear();
+        this.insertHTMLAfterBegin(markup);
+    }
+    _generateMarkup() {
+        return `<div class='week'>
+    <div class='monday'>
+    <h1>MONDAY</h1>
+    ${this._data[0].map((result)=>(0, _previewViewDefault.default).render(result, false)).join("")}</div>
+    <div class='tuesday'>
+    <h1>TUESDAY</h1>
+    ${this._data[1].map((result)=>(0, _previewViewDefault.default).render(result, false)).join("")}</div>
+    <div class='wednesday'>
+    <h1>WEDNESDAY</h1>
+    ${this._data[2].map((result)=>(0, _previewViewDefault.default).render(result, false)).join("")}</div>
+    <div class='thursday'>
+    <h1>THURSDAY</h1>
+    ${this._data[3].map((result)=>(0, _previewViewDefault.default).render(result, false)).join("")}</div>   
+    <div class='friday'>
+    <h1>FRIDAY</h1>
+    ${this._data[4].map((result)=>(0, _previewViewDefault.default).render(result, false)).join("")}</div>    
+    <div class='saturday'>
+    <h1>SATURDAY</h1>
+    ${this._data[5].map((result)=>(0, _previewViewDefault.default).render(result, false)).join("")}</div>   
+    <div class='sunday'>
+    <h1>SUNDAY</h1>
+    ${this._data[6].map((result)=>(0, _previewViewDefault.default).render(result, false)).join("")}</div>   
+    </div>;`;
+    }
+}
+exports.default = new weekRecipeView();
+
+},{"./View":"5cUXS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./previewView":"1FDQ6","url:../../img/icons.svg":"loVOp"}]},["d8XZh","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
