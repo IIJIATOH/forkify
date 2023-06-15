@@ -143,6 +143,7 @@ body {
   border-radius: 50%;
   justify-content: center;
   align-items: center;
+  margin-right: 1rem;
   transition: all .2s;
   display: flex;
 }
@@ -251,12 +252,8 @@ body {
 }
 
 .btn--week {
-  color: #fff;
   background-color: gray;
-  margin-right: 1rem;
   padding: 10px;
-  font-size: 1.3rem;
-  font-weight: 700;
 }
 
 .btn--week-day {
