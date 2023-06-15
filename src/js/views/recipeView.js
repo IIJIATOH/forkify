@@ -90,7 +90,11 @@ class RecipeView extends View {
        </svg>
       </div>
       <button class="btn--addIng">ADD INGRIDIENTS</button>
+<<<<<<< HEAD
       <div class= "btn--week"><span>Week</span>
+=======
+      <div class= "btn--week btn--round"><span>Week</span>
+>>>>>>> 44370b08f3dd90b74f4dd5a948e4d6406313b6f5
       <button data-day='mon' class= "btn--week-day btn--mon">Mon</button>
       <button data-day='tue' class= "btn--week-day btn--tue">Tue</button>
       <button data-day='wed' class= "btn--week-day btn--wed">Wed</button>
